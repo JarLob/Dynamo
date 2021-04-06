@@ -7,7 +7,7 @@ on:
         required: false
         default: false
   schedule:
-    - cron: "40 11 * * *"
+    - cron: "40 11 * * 0"
 
 jobs:
   compare:
