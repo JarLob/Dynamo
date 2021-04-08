@@ -49,7 +49,7 @@ jobs:
     - uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
-        config-file: ./.github/codeql-config.yml
+        #config-file: ./.github/codeql-config.yml
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
@@ -68,8 +68,8 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
-      with:
-        upload: false
+      #with:
+        #upload: false
 
     - name: Export Temp Directory Environment Variable
       shell: bash
