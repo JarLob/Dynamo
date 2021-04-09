@@ -55,7 +55,7 @@ jobs:
       uses: github/codeql-action/autobuild@v1
       
     - run: |
-        $colItems = Get-ChildItem $startFolder -Hidden | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
+        $colItems = Get-ChildItem $startFolder -Force | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
         foreach ($i in $colItems)
         {
             $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
@@ -64,9 +64,8 @@ jobs:
       shell: pwsh
       
     - run: |
-        rmdir /q /s bin
-        rmdir /q /s .git
-      shell: cmd
+        Get-ChildItem .\ -include bin,obj,.git -Recurse | foreach ($_) { remove-item $_.fullname -Force -Recurse }
+      shell: pwsh
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
