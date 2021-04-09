@@ -53,6 +53,10 @@ jobs:
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
+      
+    - run: |
+        cd ..
+        rmdir /q /s Dynamo
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
