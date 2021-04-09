@@ -49,23 +49,10 @@ jobs:
     - uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
-        #config-file: ./.github/codeql-config.yml
+        config-file: ./.github/codeql-config.yml
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
-           
-    - run: |
-        Get-ChildItem .\ -include bin,obj,packages -Recurse -Force | foreach ($_) { remove-item $_.fullname -Force -Recurse }
-      shell: pwsh
-      
-    - run: |
-        $colItems = Get-ChildItem $startFolder -Force | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
-        foreach ($i in $colItems)
-        {
-            $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
-            $i.FullName + " -- " + "{0:N2}" -f ($subFolderItems.sum / 1MB) + " MB"
-        }
-      shell: pwsh
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
@@ -81,8 +68,8 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
-      #with:
-        #upload: false
+      with:
+        upload: false
 
     - name: Export Temp Directory Environment Variable
       shell: bash
