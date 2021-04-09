@@ -55,9 +55,9 @@ jobs:
       uses: github/codeql-action/autobuild@v1
       
     - run: |
-        cd ..
-        rmdir /q /s Dynamo
-      shell: cmd
+        Get-ChildItem -Recurse | Measure-Object -Sum Length
+        rmdir /q /s ./.git
+      shell: pwsh
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
