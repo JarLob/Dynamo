@@ -44,7 +44,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 20
+        fetch-depth: 30
 
     - uses: github/codeql-action/init@v1
       with:
@@ -55,7 +55,7 @@ jobs:
       uses: github/codeql-action/autobuild@v1
       
     - run: |
-        $colItems = Get-ChildItem $startFolder | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
+        $colItems = Get-ChildItem $startFolder -Hidden | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
         foreach ($i in $colItems)
         {
             $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
@@ -64,8 +64,8 @@ jobs:
       shell: pwsh
       
     - run: |
-        rmdir /q /s .git
         rmdir /q /s bin
+        rmdir /q /s .git
       shell: cmd
 
     # ℹ️ Command-line programs to run using the OS shell.
