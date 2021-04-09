@@ -50,43 +50,16 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         #config-file: ./.github/codeql-config.yml
-        
-    - run: |
-        $colItems = Get-ChildItem $startFolder -Force | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
-        foreach ($i in $colItems)
-        {
-            $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
-            $i.FullName + " -- " + "{0:N2}" -f ($subFolderItems.sum / 1MB) + " MB"
-        }
-      shell: pwsh
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
-      
+           
     - run: |
-        $colItems = Get-ChildItem $startFolder -Force | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
-        foreach ($i in $colItems)
-        {
-            $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
-            $i.FullName + " -- " + "{0:N2}" -f ($subFolderItems.sum / 1MB) + " MB"
-        }
-      shell: pwsh
-      
-    - run: |
-        Get-ChildItem .\ -include bin,obj,.git -Recurse -Force | foreach ($_) { remove-item $_.fullname -Force -Recurse }
+        Get-ChildItem .\ -include bin,obj,packages -Recurse -Force | foreach ($_) { remove-item $_.fullname -Force -Recurse }
       shell: pwsh
       
     - run: |
         $colItems = Get-ChildItem $startFolder -Force | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
-        foreach ($i in $colItems)
-        {
-            $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
-            $i.FullName + " -- " + "{0:N2}" -f ($subFolderItems.sum / 1MB) + " MB"
-        }
-      shell: pwsh
-      
-    - run: |
-        $colItems = Get-ChildItem ./src -Force | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
         foreach ($i in $colItems)
         {
             $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
