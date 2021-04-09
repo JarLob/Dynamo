@@ -86,8 +86,7 @@ jobs:
       shell: pwsh
       
     - run: |
-        $startFolder = ./src
-        $colItems = Get-ChildItem $startFolder -Force | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
+        $colItems = Get-ChildItem ./src -Force | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
         foreach ($i in $colItems)
         {
             $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
