@@ -28,6 +28,10 @@ jobs:
             });
 
             return { behind_by: ret.data.behind_by, sha: ret.data.base_commit.sha };
+            
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 30
 
   analyze:
     needs: compare
@@ -42,9 +46,6 @@ jobs:
         language: ['csharp','python']
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 30
 
     - uses: github/codeql-action/init@v1
       with:
@@ -73,10 +74,20 @@ jobs:
       shell: pwsh
       
     - run: |
-        Get-ChildItem .\ -include bin,obj,.git -Recurse | foreach ($_) { remove-item $_.fullname -Force -Recurse }
+        Get-ChildItem .\ -include bin,obj,.git -Recurse -Force | foreach ($_) { remove-item $_.fullname -Force -Recurse }
       shell: pwsh
       
     - run: |
+        $colItems = Get-ChildItem $startFolder -Force | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
+        foreach ($i in $colItems)
+        {
+            $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
+            $i.FullName + " -- " + "{0:N2}" -f ($subFolderItems.sum / 1MB) + " MB"
+        }
+      shell: pwsh
+      
+    - run: |
+        $startFolder = ./src
         $colItems = Get-ChildItem $startFolder -Force | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
         foreach ($i in $colItems)
         {
