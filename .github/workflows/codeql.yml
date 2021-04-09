@@ -55,9 +55,18 @@ jobs:
       uses: github/codeql-action/autobuild@v1
       
     - run: |
-        Get-ChildItem -Recurse | Measure-Object -Sum Length
-        rmdir /q /s ./.git
+        $colItems = Get-ChildItem $startFolder | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
+        foreach ($i in $colItems)
+        {
+            $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
+            $i.FullName + " -- " + "{0:N2}" -f ($subFolderItems.sum / 1MB) + " MB"
+        }
       shell: pwsh
+      
+    - run: |
+        rmdir /q /s .git
+        rmdir /q /s bin
+      shell: cmd
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
