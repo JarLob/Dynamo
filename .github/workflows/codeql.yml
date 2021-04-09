@@ -28,10 +28,6 @@ jobs:
             });
 
             return { behind_by: ret.data.behind_by, sha: ret.data.base_commit.sha };
-            
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 30
 
   analyze:
     needs: compare
@@ -46,7 +42,10 @@ jobs:
         language: ['csharp','python']
 
     steps:
-
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 30
+          
     - uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
