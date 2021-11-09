@@ -61,7 +61,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
+        fetch-depth: 40
         persist-credentials: false
+
+    - run: |
+        git remote add upstream git://github.com/DynamoDS/Dynamo.git
+        git config --global user.email "octokit@github.com"
+        git config --global user.name "Octokit"
+        git fetch upstream || exit 1
+        git rebase ${{ fromJSON(needs.compare.outputs.result).sha }} || exit 1
           
     - uses: github/codeql-action/init@v1
       with:
