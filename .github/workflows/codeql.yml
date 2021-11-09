@@ -36,6 +36,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
+        token: ${{ secrets.SYNC_TOKEN }}
         fetch-depth: 40
         
     - run: |
